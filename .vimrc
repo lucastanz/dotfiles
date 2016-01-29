@@ -4,9 +4,19 @@
 
 " not compatible with vi
 set nocompatible
+filetype off
 
-" pathogen.vim plugin management
-execute pathogen#infect()
+" Vundle
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" Bundles
+Bundle 'tpope/vim-surround'
+Bundle 'kien/ctrlp.vim'
+Bundle 'shawncplus/phpcomplete.vim'
+Bundle 'ervandew/supertab'
+Bundle 'vim-airline/vim-airline'
+Bundle 'vim-airline/vim-airline-themes'
 
 " Tabs and autoindent
 filetype plugin indent on
@@ -98,11 +108,11 @@ let g:ctrlp_custom_ignore = {
   \ }
 
 " PyMatcher for CtrlP
-if !has('python')
-    echo 'In order to use pymatcher plugin, you need +python compiled vim'
-else
-    let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-endif
+"if !has('python')
+"    echo 'In order to use pymatcher plugin, you need +python compiled vim'
+"else
+"    let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+"endif
 
 " Set delay to prevent extra search
 let g:ctrlp_lazy_update = 350
@@ -128,8 +138,9 @@ let g:airline_right_sep=''
 let g:airline_theme='wombat'
 set laststatus=2 " always show the bottom bar
 
-" PHP Complete
+" PHP/HTML Complete
 "set omnifunc=syntaxcomplete#Complete
+set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 set completeopt=longest,menuone
 
