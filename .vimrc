@@ -82,10 +82,10 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 20
 " new settings ( require last netrw vimball for Lexplore command ) 
-augroup ProjectDrawer
-    autocmd!
-    autocmd VimEnter * :Lexplore
-augroup END
+"augroup ProjectDrawer
+"    autocmd!
+"    autocmd VimEnter * :Lexplore
+"augroup END
 noremap <silent> <c-n> :Lexplore <CR>
 
 " CTRL-P
