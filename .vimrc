@@ -17,6 +17,15 @@ Bundle 'shawncplus/phpcomplete.vim'
 Bundle 'ervandew/supertab'
 Bundle 'vim-airline/vim-airline'
 Bundle 'vim-airline/vim-airline-themes'
+Bundle 'tpope/vim-fugitive'
+Bundle 'mikehaertl/pdv-standalone'
+Bundle 'stephpy/vim-php-cs-fixer'
+Bundle 'vim-php/vim-php-refactoring'
+Bundle 'EvanDotPro/php_getset.vim'
+Bundle 'juneedahamed/svnj.vim'
+Bundle 'vim-scripts/matchit.zip'
+"Bundle 'tpope/vim-vinegar'
+"Bundle 'scrooloose/syntastic'
 
 " Tabs and autoindent
 filetype plugin indent on
@@ -59,10 +68,10 @@ nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
-highlight Normal ctermfg=white ctermbg=234
-highlight VertSplit ctermfg=232 ctermbg=232
-set fillchars+=vert:\ 
-hi Search ctermbg=238
+"highlight Normal ctermfg=white ctermbg=234
+"highlight VertSplit ctermfg=232 ctermbg=232
+"set fillchars+=vert:\ 
+"hi Search ctermbg=238
 
 """"""""""""""""""""""
 " Mappings            
@@ -80,6 +89,9 @@ nnoremap <silent> ]a :next<CR>
 nnoremap <silent> [A :first<CR>
 nnoremap <silent> ]A :last<CR>
 
+" Save as root
+cnoremap w!! %!sudo tee > /dev/null %
+
 
 """"""""""""""""""""""
 " Plugins            
@@ -91,6 +103,7 @@ let g:netrw_liststyle=3 " file list like a tree
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 20
+let g:netrw_list_hide = '.*\.svn$'
 " new settings ( require last netrw vimball for Lexplore command ) 
 "augroup ProjectDrawer
 "    autocmd!
@@ -146,3 +159,45 @@ set completeopt=longest,menuone
 
 " SuperTab
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"" PHP Complete
+
+" Syntastic
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+
+" pdv-standalone phpdoc
+nnoremap <C-K> :call PhpDocSingle()<CR>
+vnoremap <C-K> :call PhpDocRange()<CR>
+
+let g:pdv_cfg_Package = 'placeholder'
+let g:pdv_cfg_Version = '1.0.0'
+let g:pdv_cfg_Author = 'Author'
+let g:pdv_cfg_Copyright = 'Copyright 2011 by Your Name <your.name@example.com>'
+let g:pdv_cfg_License = 'Provided under the GPL (http://www.gnu.org/copyleft/gpl.html)'
+
+"php cs fixer
+" If php-cs-fixer is in $PATH, you don't need to define line below
+let g:php_cs_fixer_path = "/usr/local/bin/php-cs-fixer" " define the path to the php-cs-fixer.phar
+let g:php_cs_fixer_level = "symfony"              " which level ?
+let g:php_cs_fixer_config = "default"             " configuration
+"let g:php_cs_fixer_config_file = '.php_cs'       " configuration file
+let g:php_cs_fixer_php_path = "php"               " Path to PHP
+" If you want to define specific fixers:
+"let g:php_cs_fixer_fixers_list = "linefeed,short_tag,indentation"
+let g:php_cs_fixer_enable_default_mapping = 1     " Enable the mapping by default (<leader>pcd)
+let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
+let g:php_cs_fixer_verbose = 0                    " Return the output of command if 1, else an inline information.
+nnoremap <silent><leader>pcd :call PhpCsFixerFixDirectory()<CR>
+nnoremap <silent><leader>pcf :call PhpCsFixerFixFile()<CR>
+
+" colorscheme
+set background=dark
+colorscheme molokai
+if fnamemodify(getcwd(), ':t') == 'from-rome-with-love'
+  autocmd BufWritePost * call system('sculpin generate')
+endif
