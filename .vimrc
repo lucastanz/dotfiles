@@ -22,8 +22,9 @@ Bundle 'mikehaertl/pdv-standalone'
 Bundle 'stephpy/vim-php-cs-fixer'
 Bundle 'vim-php/vim-php-refactoring'
 Bundle 'EvanDotPro/php_getset.vim'
-Bundle 'juneedahamed/svnj.vim'
 Bundle 'vim-scripts/matchit.zip'
+Bundle "wookiehangover/jshint.vim"
+
 "Bundle 'tpope/vim-vinegar'
 "Bundle 'scrooloose/syntastic'
 
@@ -201,3 +202,7 @@ colorscheme molokai
 if fnamemodify(getcwd(), ':t') == 'from-rome-with-love'
   autocmd BufWritePost * call system('sculpin generate')
 endif
+
+" automatic jslint
+let JSHintUpdateWriteOnly=1
+
