@@ -12,6 +12,7 @@ call vundle#rc()
 
 " Bundles
 Bundle 'tpope/vim-surround'
+Bundle 'scrooloose/nerdtree'
 Bundle 'kien/ctrlp.vim'
 Bundle 'shawncplus/phpcomplete.vim'
 Bundle 'ervandew/supertab'
@@ -36,6 +37,9 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 set smarttab
+
+" no .swp files
+set noswapfile
 
 " Syntax highlighting
 syntax on
@@ -99,18 +103,18 @@ cnoremap w!! %!sudo tee > /dev/null %
 """"""""""""""""""""""
 
 " Netrw
-let g:netrw_banner=0    " no header for netrw
-let g:netrw_liststyle=3 " file list like a tree
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
-let g:netrw_winsize = 20
-let g:netrw_list_hide = '.*\.svn$'
+"let g:netrw_banner=0    " no header for netrw
+"let g:netrw_liststyle=3 " file list like a tree
+"let g:netrw_browse_split = 4
+"let g:netrw_altv = 1
+"let g:netrw_winsize = 20
+"let g:netrw_list_hide = '.*\.svn$'
 " new settings ( require last netrw vimball for Lexplore command ) 
-"augroup ProjectDrawer
-"    autocmd!
-"    autocmd VimEnter * :Lexplore
-"augroup END
-noremap <silent> <c-n> :Lexplore <CR>
+augroup ProjectDrawer
+    autocmd!
+    autocmd VimEnter * :NERDTreeToggle
+augroup END
+noremap <silent> <c-n> :NERDTreeToggle <CR>
 
 " CTRL-P
 set runtimepath^=~/.vim/bundle/ctrlp.vim
@@ -206,3 +210,5 @@ endif
 " automatic jslint
 let JSHintUpdateWriteOnly=1
 
+autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
+autocmd Filetype html setlocal ts=2 sts=2 sw=2
