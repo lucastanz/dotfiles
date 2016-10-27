@@ -25,6 +25,9 @@ Bundle 'vim-php/vim-php-refactoring'
 Bundle 'EvanDotPro/php_getset.vim'
 Bundle 'vim-scripts/matchit.zip'
 Bundle "wookiehangover/jshint.vim"
+Bundle 'joonty/vdebug'
+Bundle 'pangloss/vim-javascript'
+Bundle 'mxw/vim-jsx'
 
 "Bundle 'tpope/vim-vinegar'
 "Bundle 'scrooloose/syntastic'
@@ -210,5 +213,29 @@ endif
 " automatic jslint
 let JSHintUpdateWriteOnly=1
 
-autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
+let NERDTreeShowHidden=1
+
+" vdebug
+let g:vdebug_options = {}
+let g:vdebug_options["port"] = 9000
+
 autocmd Filetype html setlocal ts=2 sts=2 sw=2
+autocmd Filetype css setlocal ts=2 sts=2 sw=2
+autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
+autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
+autocmd Filetype json setlocal ts=2 sts=2 sw=2
+autocmd Filetype typescript setlocal ts=2 sts=2 sw=2
+autocmd Filetype ts setlocal ts=2 sts=2 sw=2
+
+inoremap { {}<Esc>i
+inoremap [ []<Esc>i
+inoremap ( ()<Esc>i
+inoremap {<CR>  {<CR>}<Esc>O
+inoremap {<C-j>  {<CR>}<Esc>O
+inoremap [<CR>  [<CR>]<Esc>O
+inoremap [<C-j>  [<CR>]<Esc>O
+inoremap (<CR>  (<CR>)<Esc>O
+inoremap (<C-j>  (<CR>)<Esc>O
+
+let g:jsx_ext_required = 0
+
