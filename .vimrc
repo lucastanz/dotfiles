@@ -13,6 +13,7 @@ call vundle#rc()
 " Bundles
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/nerdcommenter'
 Bundle 'kien/ctrlp.vim'
 Bundle 'shawncplus/phpcomplete.vim'
 Bundle 'ervandew/supertab'
@@ -24,10 +25,11 @@ Bundle 'stephpy/vim-php-cs-fixer'
 Bundle 'vim-php/vim-php-refactoring'
 Bundle 'EvanDotPro/php_getset.vim'
 Bundle 'vim-scripts/matchit.zip'
-Bundle "wookiehangover/jshint.vim"
+"Bundle "wookiehangover/jshint.vim"
 Bundle 'joonty/vdebug'
 Bundle 'pangloss/vim-javascript'
 Bundle 'mxw/vim-jsx'
+Bundle 'mattn/emmet-vim'
 
 "Bundle 'tpope/vim-vinegar'
 "Bundle 'scrooloose/syntastic'
@@ -227,15 +229,12 @@ autocmd Filetype json setlocal ts=2 sts=2 sw=2
 autocmd Filetype typescript setlocal ts=2 sts=2 sw=2
 autocmd Filetype ts setlocal ts=2 sts=2 sw=2
 
-inoremap { {}<Esc>i
-inoremap [ []<Esc>i
-inoremap ( ()<Esc>i
 inoremap {<CR>  {<CR>}<Esc>O
 inoremap {<C-j>  {<CR>}<Esc>O
-inoremap [<CR>  [<CR>]<Esc>O
-inoremap [<C-j>  [<CR>]<Esc>O
-inoremap (<CR>  (<CR>)<Esc>O
-inoremap (<C-j>  (<CR>)<Esc>O
+inoremap [<CR>  [<CR>];<Esc>O
+inoremap [<C-j>  [<CR>];<Esc>O
+inoremap (<CR>  (<CR>);<Esc>O
+inoremap (<C-j>  (<CR>);<Esc>O
 
 let g:jsx_ext_required = 0
 
