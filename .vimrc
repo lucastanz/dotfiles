@@ -30,6 +30,15 @@ Bundle 'joonty/vdebug'
 Bundle 'pangloss/vim-javascript'
 Bundle 'mxw/vim-jsx'
 Bundle 'mattn/emmet-vim'
+Bundle 'qbbr/vim-symfony'
+Bundle 'arnaud-lb/vim-php-namespace'
+Bundle "lepture/vim-jinja"
+
+" Snippet engine
+Bundle 'SirVer/ultisnips'
+" Some snippets
+Bundle 'honza/vim-snippets'
+Bundle 'nelsyeung/twig.vim'
 
 "Bundle 'tpope/vim-vinegar'
 "Bundle 'scrooloose/syntastic'
@@ -125,7 +134,7 @@ noremap <silent> <c-n> :NERDTreeToggle <CR>
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.jpg,*.gif,*.png
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$',
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules|public$',
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
@@ -146,7 +155,7 @@ let g:ctrlp_clear_cache_on_exit = 0
 
 " Set no file limit, we are building a big project
 let g:ctrlp_max_files = 0
-
+let g:ctrlp_working_path_mode = 'w'
 " If ag is available use it as filename list generator instead of 'find'
 "if executable("ag")
 "    set grepprg=ag\ --nogroup\ --nocolor
@@ -238,6 +247,17 @@ inoremap (<C-j>  (<CR>);<Esc>O
 
 let g:jsx_ext_required = 0
 
+" vim-php-namespace
+
+inoremap <Leader>u <C-O>:call PhpInsertUse()<CR>
+noremap <Leader>u :call PhpInsertUse()<CR>
+
+" Ultisnips
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
 " autocreates a dir if does not exist
 function s:MkNonExDir(file, buf)
     if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
@@ -251,3 +271,9 @@ augroup BWCCreateDir
     autocmd!
     autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
+
+" set tags for a project
+let g:ctagsFile='~/.vim/ctags/php/' . fnamemodify(getcwd(), ':t')
+if filereadable(g:ctagsFile)
+   set tags=ctagsFile 
+endif
