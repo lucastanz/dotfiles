@@ -20,3 +20,11 @@ if [ ! -d ~/.vim/colors ]; then
 fi
 
 wget -O ~/.vim/colors/molokai.vim https://raw.githubusercontent.com/tomasr/molokai/master/colors/molokai.vim
+
+#install universal ctags
+git clone https://github.com/universal-ctags/ctags.git /tmp/ctags && cd $_
+sudo apt-get install dh-autoreconf
+./autogen.sh
+./configure
+make
+sudo make install

@@ -10,7 +10,9 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+""""""""""""""""""""""
 " Bundles
+""""""""""""""""""""""
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
@@ -25,23 +27,32 @@ Bundle 'stephpy/vim-php-cs-fixer'
 Bundle 'vim-php/vim-php-refactoring'
 Bundle 'EvanDotPro/php_getset.vim'
 Bundle 'vim-scripts/matchit.zip'
-"Bundle "wookiehangover/jshint.vim"
 Bundle 'joonty/vdebug'
 Bundle 'pangloss/vim-javascript'
 Bundle 'mxw/vim-jsx'
 Bundle 'mattn/emmet-vim'
 Bundle 'qbbr/vim-symfony'
-Bundle 'arnaud-lb/vim-php-namespace'
-Bundle "lepture/vim-jinja"
 
-" Snippet engine
-Bundle 'SirVer/ultisnips'
-" Some snippets
+" auto insert phpnamespaces using \u
+Bundle 'arnaud-lb/vim-php-namespace'
+
+Bundle "ludovicchabant/vim-gutentags"
+
+" Snippet engine + some snippets
+Bundle 'SirVer/ultisnips' 
 Bundle 'honza/vim-snippets'
+
 Bundle 'nelsyeung/twig.vim'
 
 "Bundle 'tpope/vim-vinegar'
 "Bundle 'scrooloose/syntastic'
+
+Bundle '2072/PHP-Indenting-for-VIm'
+
+"""""""""""""""""""""
+" End Bundles 
+"""""""""""""""""""""
+
 
 " Tabs and autoindent
 filetype plugin indent on
@@ -54,9 +65,6 @@ set smarttab
 
 " no .swp files
 set noswapfile
-
-" Syntax highlighting
-syntax on
 
 " autocompletion like zsh 
 set wildmenu
@@ -77,6 +85,7 @@ set clipboard=unnamedplus
 " highlight search
 set hlsearch
 set incsearch
+
 " clear search highlight with ctrl-l
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 
@@ -238,17 +247,21 @@ autocmd Filetype json setlocal ts=2 sts=2 sw=2
 autocmd Filetype typescript setlocal ts=2 sts=2 sw=2
 autocmd Filetype ts setlocal ts=2 sts=2 sw=2
 
+au BufReadPost *.twig set syntax=html
+
+" automatic closing brackets
 inoremap {<CR>  {<CR>}<Esc>O
 inoremap {<C-j>  {<CR>}<Esc>O
+
 inoremap [<CR>  [<CR>];<Esc>O
 inoremap [<C-j>  [<CR>];<Esc>O
+
 inoremap (<CR>  (<CR>);<Esc>O
 inoremap (<C-j>  (<CR>);<Esc>O
 
 let g:jsx_ext_required = 0
 
 " vim-php-namespace
-
 inoremap <Leader>u <C-O>:call PhpInsertUse()<CR>
 noremap <Leader>u :call PhpInsertUse()<CR>
 
@@ -257,6 +270,30 @@ noremap <Leader>u :call PhpInsertUse()<CR>
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" vim-gutentags
+let g:gutentags_enabled = 1
+let g:gutentags_generate_on_missing = 1      " Generate a tags file if there is none.
+let g:gutentags_generate_on_new = 0          " Don't regenerate tags file in a new Vim session (I tend to reopen Vim a lot).
+let g:gutentags_generate_on_write = 1        " Do update the tags file on file save.
+let g:gutentags_resolve_symlinks = 1
+" Only index tags in git projects. Store tags files inside of the .git
+" repository so it doesn't make the repo dirty if 'tags' is missing from
+" .gitignore. Downside: this doesn't work for non-git repositories. I would
+" enable it for other VCS's as well but I haven't found how to
+" conditionalize the '.git' in gutentags_ctags_tagfile...
+let g:gutentags_ctags_tagfile = '.git/tags'
+let g:gutentags_project_root = ['.git']
+let g:gutentags_add_default_project_roots = 0
+" Make ctags add the language of the tag, so that we can postprocess the
+" tags file for fuzzy tag finding.
+let g:gutentags_ctags_extra_args = ['--totals=yes', '--tag-relative=yes', '--fields=+afkst', '--PHP-kinds=+cfit-va']
+" Exclude useless files
+let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
+                                  \ '*.phar', '*.ini', '*.rst', '*.md',
+                                  \ '*vendor/*/test*', '*vendor/*/Test*',
+                                  \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
+                                  \ '*var/cache*', '*var/log*']
 
 " autocreates a dir if does not exist
 function s:MkNonExDir(file, buf)
@@ -272,8 +309,5 @@ augroup BWCCreateDir
     autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
 
-" set tags for a project
-let g:ctagsFile='~/.vim/ctags/php/' . fnamemodify(getcwd(), ':t')
-if filereadable(g:ctagsFile)
-   set tags=ctagsFile 
-endif
+" to make higlighting work for both html and twig in twig files
+syntax on
