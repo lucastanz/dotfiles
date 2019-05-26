@@ -13,22 +13,18 @@ call vundle#rc()
 """"""""""""""""""""""
 " Bundles
 """"""""""""""""""""""
+Bundle 'neoclide/coc.nvim'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'kien/ctrlp.vim'
-Bundle 'shawncplus/phpcomplete.vim'
-Bundle 'ervandew/supertab'
 Bundle 'vim-airline/vim-airline'
 Bundle 'vim-airline/vim-airline-themes'
 Bundle 'tpope/vim-fugitive'
 Bundle 'mikehaertl/pdv-standalone'
 Bundle 'stephpy/vim-php-cs-fixer'
-Bundle 'vim-php/vim-php-refactoring'
-Bundle 'EvanDotPro/php_getset.vim'
+"Bundle 'vim-php/vim-php-refactoring'
 Bundle 'vim-scripts/matchit.zip'
-Bundle 'joonty/vdebug'
-Bundle 'pangloss/vim-javascript'
 Bundle 'mxw/vim-jsx'
 Bundle 'mattn/emmet-vim'
 Bundle 'qbbr/vim-symfony'
@@ -36,16 +32,10 @@ Bundle 'qbbr/vim-symfony'
 " auto insert phpnamespaces using \u
 Bundle 'arnaud-lb/vim-php-namespace'
 
-Bundle "ludovicchabant/vim-gutentags"
-
-" Snippet engine + some snippets
-Bundle 'SirVer/ultisnips' 
-Bundle 'honza/vim-snippets'
-
+Bundle 'ludovicchabant/vim-gutentags'
 Bundle 'nelsyeung/twig.vim'
 
 "Bundle 'tpope/vim-vinegar'
-"Bundle 'scrooloose/syntastic'
 
 Bundle '2072/PHP-Indenting-for-VIm'
 
@@ -54,7 +44,7 @@ Bundle '2072/PHP-Indenting-for-VIm'
 """""""""""""""""""""
 
 
-" Tabs and autoindent
+" General - Tabs and autoindent
 filetype plugin indent on
 set autoindent
 set tabstop=4
@@ -62,9 +52,25 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 set smarttab
+set relativenumber
+set number
 
-" no .swp files
+" no .swp files or backups
 set noswapfile
+set nobackup
+set nowritebackup
+
+" Better display for messages
+set cmdheight=2
+
+" Smaller updatetime for CursorHold & CursorHoldI
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
 
 " autocompletion like zsh 
 set wildmenu
@@ -139,6 +145,62 @@ augroup ProjectDrawer
 augroup END
 noremap <silent> <c-n> :NERDTreeToggle <CR>
 
+" coc
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[c` and `]c` to navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" coc-snipeets
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
 " CTRL-P
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.jpg,*.gif,*.png
@@ -147,13 +209,6 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
-
-" PyMatcher for CtrlP
-"if !has('python')
-"    echo 'In order to use pymatcher plugin, you need +python compiled vim'
-"else
-"    let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-"endif
 
 " Set delay to prevent extra search
 let g:ctrlp_lazy_update = 350
@@ -165,11 +220,6 @@ let g:ctrlp_clear_cache_on_exit = 0
 " Set no file limit, we are building a big project
 let g:ctrlp_max_files = 0
 let g:ctrlp_working_path_mode = 'w'
-" If ag is available use it as filename list generator instead of 'find'
-"if executable("ag")
-"    set grepprg=ag\ --nogroup\ --nocolor
-"    let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --path-to-agignore ~/.agignore --hidden -g ""'
-"endif
 
 " Airline.vim options
 let g:airline#extensions#tabline#enabled = 1
@@ -187,20 +237,6 @@ set completeopt=longest,menuone
 
 " SuperTab
 let g:SuperTabDefaultCompletionType = "<c-x><c-o>"" PHP Complete
-
-" Syntastic
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-"
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-
-" pdv-standalone phpdoc
-nnoremap <C-K> :call PhpDocSingle()<CR>
-vnoremap <C-K> :call PhpDocRange()<CR>
 
 let g:pdv_cfg_Package = 'placeholder'
 let g:pdv_cfg_Version = '1.0.0'
@@ -235,10 +271,6 @@ let JSHintUpdateWriteOnly=1
 
 let NERDTreeShowHidden=1
 
-" vdebug
-let g:vdebug_options = {}
-let g:vdebug_options["port"] = 9000
-
 autocmd Filetype html setlocal ts=2 sts=2 sw=2
 autocmd Filetype css setlocal ts=2 sts=2 sw=2
 autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
@@ -265,12 +297,6 @@ let g:jsx_ext_required = 0
 inoremap <Leader>u <C-O>:call PhpInsertUse()<CR>
 noremap <Leader>u :call PhpInsertUse()<CR>
 
-" Ultisnips
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
 " vim-gutentags
 let g:gutentags_enabled = 1
 let g:gutentags_generate_on_missing = 1      " Generate a tags file if there is none.
@@ -282,18 +308,19 @@ let g:gutentags_resolve_symlinks = 1
 " .gitignore. Downside: this doesn't work for non-git repositories. I would
 " enable it for other VCS's as well but I haven't found how to
 " conditionalize the '.git' in gutentags_ctags_tagfile...
-let g:gutentags_ctags_tagfile = '.git/tags'
+let g:gutentags_ctags_tagfile = '.tags'
 let g:gutentags_project_root = ['.git']
 let g:gutentags_add_default_project_roots = 0
 " Make ctags add the language of the tag, so that we can postprocess the
 " tags file for fuzzy tag finding.
-let g:gutentags_ctags_extra_args = ['--totals=yes', '--tag-relative=yes', '--fields=+afkst', '--PHP-kinds=+cfit-va']
+let g:gutentags_ctags_extra_args = ['--totals=yes', '--tag-relative=yes', '--fields=+acfint', '--PHP-kinds=+acfint-va']
 " Exclude useless files
 let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
                                   \ '*.phar', '*.ini', '*.rst', '*.md',
                                   \ '*vendor/*/test*', '*vendor/*/Test*',
                                   \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
                                   \ '*var/cache*', '*var/log*']
+
 
 " autocreates a dir if does not exist
 function s:MkNonExDir(file, buf)
