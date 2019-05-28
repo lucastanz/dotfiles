@@ -63,14 +63,11 @@ set nowritebackup
 " Better display for messages
 set cmdheight=2
 
-" Smaller updatetime for CursorHold & CursorHoldI
-set updatetime=300
-
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 
 " always show signcolumns
-set signcolumn=yes
+"set signcolumn=yes
 
 " autocompletion like zsh 
 set wildmenu
@@ -152,7 +149,7 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-n>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -170,8 +167,8 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
+" remap keys for gotos
+nmap <silent> gd <plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
