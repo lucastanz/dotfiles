@@ -14,6 +14,8 @@ call vundle#rc()
 " Bundles
 """"""""""""""""""""""
 Bundle 'neoclide/coc.nvim'
+Bundle 'SirVer/ultisnips'
+Bundle 'honza/vim-snippets'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
@@ -38,6 +40,8 @@ Bundle 'nelsyeung/twig.vim'
 "Bundle 'tpope/vim-vinegar'
 
 Bundle '2072/PHP-Indenting-for-VIm'
+Bundle 'janko/vim-test'
+Bundle 'benmills/vimux'
 
 """""""""""""""""""""
 " End Bundles 
@@ -48,12 +52,14 @@ Bundle '2072/PHP-Indenting-for-VIm'
 filetype plugin indent on
 set autoindent
 set tabstop=4
-set shiftwidth=4
-set softtabstop=4
 set expandtab
+set softtabstop=4
+set shiftwidth=4
 set smarttab
+
 set relativenumber
 set number
+set scrolloff=10
 
 " no .swp files or backups
 set noswapfile
@@ -332,6 +338,14 @@ augroup BWCCreateDir
     autocmd!
     autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
+
+" vim-test
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-s> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-g> :TestVisit<CR>
+let test#strategy = "vimux"
 
 " to make higlighting work for both html and twig in twig files
 syntax on
