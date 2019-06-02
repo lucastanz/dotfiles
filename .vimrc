@@ -56,11 +56,9 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 set smarttab
-
 set relativenumber
 set number
 set scrolloff=10
-
 " no .swp files or backups
 set noswapfile
 set nobackup
@@ -69,11 +67,13 @@ set nowritebackup
 " Better display for messages
 set cmdheight=2
 
+" Smaller updatetime for CursorHold & CursorHoldI
+set updatetime=300
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 
 " always show signcolumns
-"set signcolumn=yes
+set signcolumn=yes
 
 " autocompletion like zsh 
 set wildmenu
@@ -155,7 +155,11 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
+<<<<<<< HEAD
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-n>"
+=======
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+>>>>>>> 067aaea1f19c7f66a99a81cbf6ca5b71403ce51f
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -173,8 +177,7 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
-" remap keys for gotos
-nmap <silent> gd <plug>(coc-definition)
+nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
