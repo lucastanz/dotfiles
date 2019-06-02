@@ -15,7 +15,7 @@ call vundle#rc()
 """"""""""""""""""""""
 Bundle 'neoclide/coc.nvim'
 Bundle 'SirVer/ultisnips'
-Bundle 'honza/vim-snippets'
+Bundle 'lucastanz/ultisnips-reloaded'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
@@ -52,9 +52,9 @@ Bundle 'benmills/vimux'
 filetype plugin indent on
 set autoindent
 set tabstop=4
-set expandtab
-set softtabstop=4
 set shiftwidth=4
+set softtabstop=4
+set expandtab
 set smarttab
 
 set relativenumber
@@ -238,9 +238,6 @@ set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 set completeopt=longest,menuone
 
-" SuperTab
-let g:SuperTabDefaultCompletionType = "<c-x><c-o>"" PHP Complete
-
 let g:pdv_cfg_Package = 'placeholder'
 let g:pdv_cfg_Version = '1.0.0'
 let g:pdv_cfg_Author = 'Author'
@@ -274,13 +271,20 @@ let JSHintUpdateWriteOnly=1
 
 let NERDTreeShowHidden=1
 
-autocmd Filetype html setlocal ts=2 sts=2 sw=2
+" set html filetype for .blade.php files
+augroup blade_ft
+    au!
+    autocmd BufNewFile,BufRead *.blade.php set filetype=html
+augroup END
+
+autocmd Filetype html setlocal ts=4 sts=4 sw=4
 autocmd Filetype css setlocal ts=2 sts=2 sw=2
 autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
 autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
 autocmd Filetype json setlocal ts=2 sts=2 sw=2
 autocmd Filetype typescript setlocal ts=2 sts=2 sw=2
 autocmd Filetype ts setlocal ts=2 sts=2 sw=2
+au BufNewFile,BufRead *.feature setlocal ts=2 sts=2 sw=2
 
 au BufReadPost *.twig set syntax=html
 
@@ -346,6 +350,9 @@ nmap <silent> t<C-s> :TestSuite<CR>
 nmap <silent> t<C-l> :TestLast<CR>
 nmap <silent> t<C-g> :TestVisit<CR>
 let test#strategy = "vimux"
+
+" ultisnips
+let g:UltiSnipsExpandTrigger="<C-Space>"
 
 " to make higlighting work for both html and twig in twig files
 syntax on
