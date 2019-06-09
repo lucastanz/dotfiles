@@ -42,6 +42,7 @@ Bundle 'nelsyeung/twig.vim'
 Bundle '2072/PHP-Indenting-for-VIm'
 Bundle 'janko/vim-test'
 Bundle 'benmills/vimux'
+Bundle 'vim-vdebug/vdebug'
 
 """""""""""""""""""""
 " End Bundles 
@@ -142,10 +143,10 @@ cnoremap w!! %!sudo tee > /dev/null %
 "let g:netrw_winsize = 20
 "let g:netrw_list_hide = '.*\.svn$'
 " new settings ( require last netrw vimball for Lexplore command ) 
-augroup ProjectDrawer
-    autocmd!
-    autocmd VimEnter * :NERDTreeToggle
-augroup END
+"augroup ProjectDrawer
+"    autocmd!
+"    autocmd VimEnter * :NERDTreeToggle
+"augroup END
 noremap <silent> <c-n> :NERDTreeToggle <CR>
 
 " coc
@@ -352,6 +353,13 @@ let test#strategy = "vimux"
 
 " ultisnips
 let g:UltiSnipsExpandTrigger="<C-Space>"
+
+" vdebug
+let g:vdebug_options = {'ide_key': 'netbeans-xdebug'}
+let g:vdebug_options = {'break_on_open': 0}
+let g:vdebug_options = {'server': '127.0.0.1'}
+let g:vdebug_options = {'port': '10000'}
+
 
 " to make higlighting work for both html and twig in twig files
 syntax on
