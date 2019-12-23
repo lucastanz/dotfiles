@@ -1,6 +1,6 @@
-""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General            
-""""""""""""""""""""""
+"
 
 " disable vi-compatibility
 set nocompatible
@@ -14,46 +14,61 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
-""""""""""""""""""""""
+"
+
 call plug#begin('~/.vim/plugged')
-Plug 'SirVer/ultisnips'
-Plug 'lucastanz/ultisnips-reloaded'
+
+" file explorer
+Plug 'scrooloose/nerdtree'
+"
+" mappings
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 "Plug 'tpope/vim-vinegar'
-Plug 'scrooloose/nerdtree'
-"Plug 'kien/ctrlp.vim'
+
+" git
+Plug 'tpope/vim-fugitive'
+
+" airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'stephpy/vim-php-cs-fixer'
+
 "Plug 'vim-php/vim-php-refactoring'
 Plug 'vim-scripts/matchit.zip'
-"Plug 'vim-scripts/php.vim'
+
+" syntax
 Plug 'sheerun/vim-polyglot'
 Plug 'mattn/emmet-vim'
-" auto insert phpnamespaces using \u
-Plug 'nelsyeung/twig.vim'
 Plug '2072/PHP-Indenting-for-VIm'
-Plug 'janko/vim-test'
 Plug 'benmills/vimux'
+
+" debugger
 Plug 'vim-vdebug/vdebug'
-"Plug 'farmergreg/vim-lastplace'
-"Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+
+" snippets
+Plug 'SirVer/ultisnips' "snippet engine
+Plug 'lucastanz/ultisnips-reloaded' "snippets collection
+
+" php autocompletion
 Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
+"Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+
+" file structure navigator
 Plug 'majutsushi/tagbar'
+
+" fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim' "install also ripgrep (https://github.com/BurntSushi/ripgrep#installation)
+Plug 'junegunn/fzf.vim' "install also ripgrep (./install.sh)
+"Plug 'kien/ctrlp.vim'
+
 call plug#end()
 
-"""""""""""""""""""""
-" End Plug 
-"""""""""""""""""""""
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General - Tabs and autoindent
+"
 set autoindent
 set copyindent
 set tabstop=4
@@ -151,9 +166,9 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Mappings            
-""""""""""""""""""""""
+"
 
 " easily traverse buffers (:bp, :bn, :bf, :bl)
 nnoremap <silent> [b :bprevious<CR>
@@ -170,18 +185,18 @@ nnoremap <silent> ]A :last<CR>
 " Save as root
 cnoremap w!! %!sudo tee > /dev/null %
 
-"""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Abbrev
-"""""""""""""""""""""
+"
 
 " laravel
 abbrev mm !php artisan make:model
 abbrev mc !php artisan make:controller
 abbrev mmig !php artisan make:migration
 
-""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Files behaviour
-""""""""""""""""""""""
+"
 
 " php
 
@@ -202,16 +217,20 @@ function! FacadeLookup()
 endfunction
 nmap ,lf :call FacadeLookup()<cr>
 
-""""""""""""""""""""""
-" Plugins            
-""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugins configuration
+"
 
+""""""""""""""""""""""""""""""""""""""""
 " NERDTree
-let NERDTreeAutoDeleteBuffer=1
-let NERDTreeShowHidden=1
+"
 let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=1
-"
+let NERDTreeShowHidden=1
+let NERDTreeAutoDeleteBuffer=1
+
+noremap <silent> <c-n> :NERDTreeToggle <CR>
+
 " Open a NerdTree if no file is given as CLI argument
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -224,9 +243,10 @@ autocmd BufReadPre,FileReadPre * :NERDTreeClose
 " vim-commentary
 autocmd FileType php setlocal commentstring=//\ %s
 
+""""""""""""""""""""""""""""""""""""""""
 " phpactor
-" autocompletion
-autocmd FileType php setlocal omnifunc=phpactor#Complete
+"
+"autocmd FileType php setlocal omnifunc=phpactor#Complete
 
 " Include use statement
 nmap <Leader>u :call phpactor#UseAdd()<CR>
@@ -261,25 +281,16 @@ vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
 " Extract method from selection
 vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
 
-" Netrw
-"let g:netrw_banner=0    " no header for netrw
-"let g:netrw_liststyle=3 " file list like a tree
-"let g:netrw_browse_split = 4
-"let g:netrw_altv = 1
-"let g:netrw_winsize = 20
-"let g:netrw_list_hide = '.*\.svn$'
-" new settings ( require last netrw vimball for Lexplore command ) 
-"augroup ProjectDrawer
-"    autocmd!
-"    autocmd VimEnter * :NERDTreeToggle
-"augroup END
-noremap <silent> <c-n> :NERDTreeToggle <CR>
 
+""""""""""""""""""""""""""""""""""""""""
 " fzf
+"
 nnoremap <C-p> :Files<Cr>
 nnoremap <C-f> :Rg<Cr>
 
+""""""""""""""""""""""""""""""""""""""""
 " CTRL-P
+"
 "set runtimepath^=~/.vim/plugged/ctrlp.vim
 "set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.jpg,*.gif,*.png
 "let g:ctrlp_custom_ignore = {
@@ -299,7 +310,9 @@ nnoremap <C-f> :Rg<Cr>
 "let g:ctrlp_max_files = 0
 "let g:ctrlp_working_path_mode = 'w'
 
-" Airline.vim options
+""""""""""""""""""""""""""""""""""""""""
+" Airline.vim
+"
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts=1
 let g:airline_left_sep=''
@@ -307,37 +320,27 @@ let g:airline_right_sep=''
 let g:airline_theme='wombat'
 set laststatus=2 " always show the bottom bar
 
-let g:pdv_cfg_Package = 'placeholder'
-let g:pdv_cfg_Version = '1.0.0'
-let g:pdv_cfg_Author = 'Author'
-let g:pdv_cfg_Copyright = 'Copyright 2011 by Your Name <your.name@example.com>'
-let g:pdv_cfg_License = 'Provided under the GPL (http://www.gnu.org/copyleft/gpl.html)'
-
+""""""""""""""""""""""""""""""""""""""""
 " colorscheme
+"
 set background=dark
 colorscheme molokai
 
-" automatic jslint
-let JSHintUpdateWriteOnly=1
-
-" set html filetype for .blade.php files
-augroup blade_ft
-    au!
-    autocmd BufNewFile,BufRead *.blade.php set filetype=html
-augroup END
-
+""""""""""""""""""""""""""""""""""""""""
+" tab settings for each language
+"
 autocmd Filetype html setlocal ts=4 sts=4 sw=4
-autocmd Filetype css setlocal ts=2 sts=2 sw=2
+autocmd Filetype css setlocal ts=4 sts=4 sw=4
 autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
 autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
-autocmd Filetype json setlocal ts=2 sts=2 sw=2
+autocmd Filetype json setlocal ts=4 sts=4 sw=4
 autocmd Filetype typescript setlocal ts=2 sts=2 sw=2
 autocmd Filetype ts setlocal ts=2 sts=2 sw=2
 au BufNewFile,BufRead *.feature setlocal ts=2 sts=2 sw=2
 
-au BufReadPost *.twig set syntax=html
-
+""""""""""""""""""""""""""""""""""""""""
 " automatic closing brackets
+"
 inoremap {<CR>  {<CR>}<Esc>O
 inoremap {<C-j>  {<CR>}<Esc>O
 
@@ -347,11 +350,9 @@ inoremap [<C-j>  [<CR>];<Esc>O
 inoremap (<CR>  (<CR>);<Esc>O
 inoremap (<C-j>  (<CR>);<Esc>O
 
-" vim-php-namespace
-inoremap <Leader>u <C-O>:call PhpInsertUse()<CR>
-noremap <Leader>u :call PhpInsertUse()<CR>
-
+""""""""""""""""""""""""""""""""""""""""
 " autocreates a dir if does not exist
+"
 function s:MkNonExDir(file, buf)
     if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
         let dir=fnamemodify(a:file, ':h')
@@ -365,30 +366,30 @@ augroup BWCCreateDir
     autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
 
+""""""""""""""""""""""""""""""""""""""""
 " tagbar
+"
 nmap <F8> :TagbarToggle<CR>
 
-" vim-test
-nmap <silent> t<C-n> :TestNearest<CR>
-nmap <silent> t<C-f> :TestFile<CR>
-nmap <silent> t<C-s> :TestSuite<CR>
-nmap <silent> t<C-l> :TestLast<CR>
-nmap <silent> t<C-g> :TestVisit<CR>
-let test#strategy = "vimux"
-
+""""""""""""""""""""""""""""""""""""""""
 " ultisnips
+"
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>" 
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>" 
 let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/plugged/ultisnips-reloaded/UltiSnips/']
 
+""""""""""""""""""""""""""""""""""""""""
 " vdebug
+"
 let g:vdebug_options = {'ide_key': 'netbeans-xdebug'}
 let g:vdebug_options = {'break_on_open': 0}
 let g:vdebug_options = {'server': '127.0.0.1'}
 let g:vdebug_options = {'port': '10000'}
 
+""""""""""""""""""""""""""""""""""""""""
 " rg search if available
+"
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --no-heading
   set grepformat=%f:%l:%m
