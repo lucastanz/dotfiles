@@ -26,14 +26,14 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 "Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdtree'
-Plug 'kien/ctrlp.vim'
+"Plug 'kien/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'stephpy/vim-php-cs-fixer'
 "Plug 'vim-php/vim-php-refactoring'
 Plug 'vim-scripts/matchit.zip'
 "Plug 'vim-scripts/php.vim'
-Plug 'mxw/vim-jsx'
+Plug 'sheerun/vim-polyglot'
 Plug 'mattn/emmet-vim'
 " auto insert phpnamespaces using \u
 Plug 'nelsyeung/twig.vim'
@@ -45,6 +45,8 @@ Plug 'vim-vdebug/vdebug'
 "Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
 Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
 Plug 'majutsushi/tagbar'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim' "install also ripgrep (https://github.com/BurntSushi/ripgrep#installation)
 call plug#end()
 
 """""""""""""""""""""
@@ -258,25 +260,29 @@ vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
 "augroup END
 noremap <silent> <c-n> :NERDTreeToggle <CR>
 
+" fzf
+nnoremap <C-p> :Files<Cr>
+nnoremap <C-f> :Rg<Cr>
+
 " CTRL-P
-set runtimepath^=~/.vim/plugged/ctrlp.vim
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.jpg,*.gif,*.png
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules|public|vendor$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
-
-" Set delay to prevent extra search
-let g:ctrlp_lazy_update = 350
-
-" Do not clear filenames cache, to improve CtrlP startup
-" You can manualy clear it by <F5>
-let g:ctrlp_clear_cache_on_exit = 0
-
-" Set no file limit, we are building a big project
-let g:ctrlp_max_files = 0
-let g:ctrlp_working_path_mode = 'w'
+"set runtimepath^=~/.vim/plugged/ctrlp.vim
+"set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.jpg,*.gif,*.png
+"let g:ctrlp_custom_ignore = {
+"  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules|public|vendor$',
+"  \ 'file': '\v\.(exe|so|dll)$',
+"  \ 'link': 'some_bad_symbolic_links',
+"  \ }
+"
+"" Set delay to prevent extra search
+"let g:ctrlp_lazy_update = 350
+"
+"" Do not clear filenames cache, to improve CtrlP startup
+"" You can manualy clear it by <F5>
+"let g:ctrlp_clear_cache_on_exit = 0
+"
+"" Set no file limit, we are building a big project
+"let g:ctrlp_max_files = 0
+"let g:ctrlp_working_path_mode = 'w'
 
 " Airline.vim options
 let g:airline#extensions#tabline#enabled = 1
@@ -310,7 +316,7 @@ augroup END
 autocmd Filetype html setlocal ts=4 sts=4 sw=4
 autocmd Filetype css setlocal ts=2 sts=2 sw=2
 autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
-autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
+autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
 autocmd Filetype json setlocal ts=2 sts=2 sw=2
 autocmd Filetype typescript setlocal ts=2 sts=2 sw=2
 autocmd Filetype ts setlocal ts=2 sts=2 sw=2
@@ -327,8 +333,6 @@ inoremap [<C-j>  [<CR>];<Esc>O
 
 inoremap (<CR>  (<CR>);<Esc>O
 inoremap (<C-j>  (<CR>);<Esc>O
-
-let g:jsx_ext_required = 0
 
 " vim-php-namespace
 inoremap <Leader>u <C-O>:call PhpInsertUse()<CR>
