@@ -2,56 +2,55 @@
 " General            
 """"""""""""""""""""""
 
-" not compatible with vi
+" disable vi-compatibility
 set nocompatible
 filetype off
 
-" Vundle
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+" Plug
+" automatic installation - https://github.com/junegunn/vim-plug/wiki/tips#automatic-installation
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
 """"""""""""""""""""""
-" Bundles
+" Plugins
 """"""""""""""""""""""
-Bundle 'neoclide/coc.nvim'
-Bundle 'SirVer/ultisnips'
-Bundle 'lucastanz/ultisnips-reloaded'
-Bundle 'tpope/vim-surround'
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'kien/ctrlp.vim'
-Bundle 'vim-airline/vim-airline'
-Bundle 'vim-airline/vim-airline-themes'
-Bundle 'tpope/vim-fugitive'
-Bundle 'mikehaertl/pdv-standalone'
-Bundle 'stephpy/vim-php-cs-fixer'
-"Bundle 'vim-php/vim-php-refactoring'
-Bundle 'vim-scripts/matchit.zip'
-Bundle 'mxw/vim-jsx'
-Bundle 'mattn/emmet-vim'
-Bundle 'qbbr/vim-symfony'
-
+call plug#begin('~/.vim/plugged')
+Plug 'SirVer/ultisnips'
+Plug 'lucastanz/ultisnips-reloaded'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+"Plug 'tpope/vim-vinegar'
+Plug 'scrooloose/nerdtree'
+Plug 'kien/ctrlp.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'stephpy/vim-php-cs-fixer'
+"Plug 'vim-php/vim-php-refactoring'
+Plug 'vim-scripts/matchit.zip'
+Plug 'mxw/vim-jsx'
+Plug 'mattn/emmet-vim'
 " auto insert phpnamespaces using \u
-Bundle 'arnaud-lb/vim-php-namespace'
-
-Bundle 'ludovicchabant/vim-gutentags'
-Bundle 'nelsyeung/twig.vim'
-
-"Bundle 'tpope/vim-vinegar'
-
-Bundle '2072/PHP-Indenting-for-VIm'
-Bundle 'janko/vim-test'
-Bundle 'benmills/vimux'
-Bundle 'vim-vdebug/vdebug'
+Plug 'nelsyeung/twig.vim'
+Plug '2072/PHP-Indenting-for-VIm'
+Plug 'janko/vim-test'
+Plug 'benmills/vimux'
+Plug 'vim-vdebug/vdebug'
+"Plug 'farmergreg/vim-lastplace'
+Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+call plug#end()
 
 """""""""""""""""""""
-" End Bundles 
+" End Plug 
 """""""""""""""""""""
-
 
 " General - Tabs and autoindent
-filetype plugin indent on
 set autoindent
+set copyindent
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
@@ -60,6 +59,18 @@ set smarttab
 set relativenumber
 set number
 set scrolloff=10
+set ignorecase " ignore case when searching
+set smartcase " ignore case if search pattern is all lowercase
+set visualbell " don't beep
+set noerrorbells " don't beep
+set autowrite " save on buffer switch
+
+" always show what mode we're currently editing in
+set showmode
+
+" no wrap lines
+set nowrap
+
 " no .swp files or backups
 set noswapfile
 set nobackup
@@ -70,6 +81,7 @@ set cmdheight=2
 
 " Smaller updatetime for CursorHold & CursorHoldI
 set updatetime=300
+
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 
@@ -96,8 +108,35 @@ set clipboard=unnamedplus
 set hlsearch
 set incsearch
 
+" to make Vim’s :! shell behave like your command prompt (loads .bashrc)
+set shell=bash
+
+set tags=.tags
+
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+
+let mapleader = ","
+let g:mapleader = ","
+
+" fast saves
+nmap <leader>w :w!<cr>
+
+" down is really the next line
+nnoremap j gj
+nnoremap k gk
+
+" easy escaping to normal mode
+imap jj <esc>
+
+" run PHPUnit tests
+map <leader>t :!./vendor/bin/phpunit %<cr>
+
 " clear search highlight with ctrl-l
 nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
+
+" auto change directory to match current file ,cd
+nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
 
 " Opens every buffer on a new tab
 "au BufAdd,BufNewFile * nested tab sball
@@ -106,10 +145,6 @@ nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
-"highlight Normal ctermfg=white ctermbg=234
-"highlight VertSplit ctermfg=232 ctermbg=232
-"set fillchars+=vert:\ 
-"hi Search ctermbg=238
 
 """"""""""""""""""""""
 " Mappings            
@@ -130,10 +165,81 @@ nnoremap <silent> ]A :last<CR>
 " Save as root
 cnoremap w!! %!sudo tee > /dev/null %
 
+"""""""""""""""""""""
+" Abbrev
+"""""""""""""""""""""
+
+" laravel
+abbrev mm !php artisan make:model
+abbrev mc !php artisan make:controller
+abbrev mmig !php artisan make:migration
+
+""""""""""""""""""""""
+" Files behaviour
+""""""""""""""""""""""
+
+" php
+
+" auto-remove trailing spaces
+autocmd BufWritePre *.php :%s/\s\+$//e
+
+" example of load undelying class for Laravel (todo fix path)
+function! FacadeLookup()
+    let facade = input('Facade Name: ')
+    let classes = {
+\        'Form': 'Html/FormBuilder.php',
+\        'Html': 'Html/HtmlBuilder.php',
+\        'File': 'Filesystem/Filesystem.php',
+\        'Eloquent': 'Database/Eloquent/Model.php'
+\    }
+
+    execute ":e vendor/laravel/framework/src/Illuminate/" . classes[facade]
+endfunction
+nmap ,lf :call FacadeLookup()<cr>
 
 """"""""""""""""""""""
 " Plugins            
 """"""""""""""""""""""
+
+" vim-commentary
+autocmd FileType php setlocal commentstring=//\ %s
+
+" phpactor
+" autocompletion
+autocmd FileType php setlocal omnifunc=phpactor#Complete
+
+" Include use statement
+nmap <Leader>u :call phpactor#UseAdd()<CR>
+
+" Invoke the context menu
+nmap <Leader>mm :call phpactor#ContextMenu()<CR>
+
+" Invoke the navigation menu
+nmap <Leader>nn :call phpactor#Navigate()<CR>
+
+" Goto definition of class or class member under the cursor
+nmap <Leader>oo :call phpactor#GotoDefinition()<CR>
+nmap <Leader>oh :call phpactor#GotoDefinitionHsplit()<CR>
+nmap <Leader>ov :call phpactor#GotoDefinitionVsplit()<CR>
+nmap <Leader>ot :call phpactor#GotoDefinitionTab()<CR>
+
+" Show brief information about the symbol under the cursor
+nmap <Leader>K :call phpactor#Hover()<CR>
+
+" Transform the classes in the current file
+nmap <Leader>tt :call phpactor#Transform()<CR>
+
+" Generate a new class (replacing the current file)
+nmap <Leader>cc :call phpactor#ClassNew()<CR>
+
+" Extract expression (normal mode)
+nmap <silent><Leader>ee :call phpactor#ExtractExpression(v:false)<CR>
+
+" Extract expression from selection
+vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
+
+" Extract method from selection
+vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
 
 " Netrw
 "let g:netrw_banner=0    " no header for netrw
@@ -148,61 +254,6 @@ cnoremap w!! %!sudo tee > /dev/null %
 "    autocmd VimEnter * :NERDTreeToggle
 "augroup END
 noremap <silent> <c-n> :NERDTreeToggle <CR>
-
-" coc
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-n>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [c <Plug>(coc-diagnostic-prev)
-nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" coc-snipeets
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-let g:coc_snippet_next = '<tab>'
 
 " CTRL-P
 set runtimepath^=~/.vim/bundle/ctrlp.vim
@@ -232,39 +283,15 @@ let g:airline_right_sep=''
 let g:airline_theme='wombat'
 set laststatus=2 " always show the bottom bar
 
-" PHP/HTML Complete
-"set omnifunc=syntaxcomplete#Complete
-set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-set completeopt=longest,menuone
-
 let g:pdv_cfg_Package = 'placeholder'
 let g:pdv_cfg_Version = '1.0.0'
 let g:pdv_cfg_Author = 'Author'
 let g:pdv_cfg_Copyright = 'Copyright 2011 by Your Name <your.name@example.com>'
 let g:pdv_cfg_License = 'Provided under the GPL (http://www.gnu.org/copyleft/gpl.html)'
 
-"php cs fixer
-" If php-cs-fixer is in $PATH, you don't need to define line below
-let g:php_cs_fixer_path = "/usr/local/bin/php-cs-fixer" " define the path to the php-cs-fixer.phar
-let g:php_cs_fixer_level = "symfony"              " which level ?
-let g:php_cs_fixer_config = "default"             " configuration
-"let g:php_cs_fixer_config_file = '.php_cs'       " configuration file
-let g:php_cs_fixer_php_path = "php"               " Path to PHP
-" If you want to define specific fixers:
-"let g:php_cs_fixer_fixers_list = "linefeed,short_tag,indentation"
-let g:php_cs_fixer_enable_default_mapping = 1     " Enable the mapping by default (<leader>pcd)
-let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
-let g:php_cs_fixer_verbose = 0                    " Return the output of command if 1, else an inline information.
-nnoremap <silent><leader>pcd :call PhpCsFixerFixDirectory()<CR>
-nnoremap <silent><leader>pcf :call PhpCsFixerFixFile()<CR>
-
 " colorscheme
 set background=dark
 colorscheme molokai
-if fnamemodify(getcwd(), ':t') == 'from-rome-with-love'
-  autocmd BufWritePost * call system('sculpin generate')
-endif
 
 " automatic jslint
 let JSHintUpdateWriteOnly=1
@@ -304,31 +331,6 @@ let g:jsx_ext_required = 0
 inoremap <Leader>u <C-O>:call PhpInsertUse()<CR>
 noremap <Leader>u :call PhpInsertUse()<CR>
 
-" vim-gutentags
-let g:gutentags_enabled = 1
-let g:gutentags_generate_on_missing = 1      " Generate a tags file if there is none.
-let g:gutentags_generate_on_new = 0          " Don't regenerate tags file in a new Vim session (I tend to reopen Vim a lot).
-let g:gutentags_generate_on_write = 1        " Do update the tags file on file save.
-let g:gutentags_resolve_symlinks = 1
-" Only index tags in git projects. Store tags files inside of the .git
-" repository so it doesn't make the repo dirty if 'tags' is missing from
-" .gitignore. Downside: this doesn't work for non-git repositories. I would
-" enable it for other VCS's as well but I haven't found how to
-" conditionalize the '.git' in gutentags_ctags_tagfile...
-let g:gutentags_ctags_tagfile = '.tags'
-let g:gutentags_project_root = ['.git']
-let g:gutentags_add_default_project_roots = 0
-" Make ctags add the language of the tag, so that we can postprocess the
-" tags file for fuzzy tag finding.
-let g:gutentags_ctags_extra_args = ['--totals=yes', '--tag-relative=yes', '--fields=+acfint', '--PHP-kinds=+acfint-va']
-" Exclude useless files
-let g:gutentags_ctags_exclude = ['*.css', '*.html', '*.js', '*.json', '*.xml',
-                                  \ '*.phar', '*.ini', '*.rst', '*.md',
-                                  \ '*vendor/*/test*', '*vendor/*/Test*',
-                                  \ '*vendor/*/fixture*', '*vendor/*/Fixture*',
-                                  \ '*var/cache*', '*var/log*']
-
-
 " autocreates a dir if does not exist
 function s:MkNonExDir(file, buf)
     if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
@@ -352,7 +354,8 @@ nmap <silent> t<C-g> :TestVisit<CR>
 let test#strategy = "vimux"
 
 " ultisnips
-let g:UltiSnipsExpandTrigger="<C-Space>"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/plugged/ultisnips-reloaded/UltiSnips/']
 
 " vdebug
 let g:vdebug_options = {'ide_key': 'netbeans-xdebug'}
