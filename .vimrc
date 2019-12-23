@@ -206,6 +206,21 @@ nmap ,lf :call FacadeLookup()<cr>
 " Plugins            
 """"""""""""""""""""""
 
+" NERDTree
+let NERDTreeAutoDeleteBuffer=1
+let NERDTreeShowHidden=1
+let NERDTreeMinimalUI=1
+let NERDTreeDirArrows=1
+"
+" Open a NerdTree if no file is given as CLI argument
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+" Close if the only remaining window is a nerdtree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+autocmd BufReadPre,FileReadPre * :NERDTreeClose
+
 " vim-commentary
 autocmd FileType php setlocal commentstring=//\ %s
 
@@ -305,8 +320,6 @@ colorscheme molokai
 " automatic jslint
 let JSHintUpdateWriteOnly=1
 
-let NERDTreeShowHidden=1
-
 " set html filetype for .blade.php files
 augroup blade_ft
     au!
@@ -375,6 +388,11 @@ let g:vdebug_options = {'break_on_open': 0}
 let g:vdebug_options = {'server': '127.0.0.1'}
 let g:vdebug_options = {'port': '10000'}
 
+" rg search if available
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading
+  set grepformat=%f:%l:%m
+endif
 
 " to make higlighting work for both html and twig in twig files
 syntax on
