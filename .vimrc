@@ -32,6 +32,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'stephpy/vim-php-cs-fixer'
 "Plug 'vim-php/vim-php-refactoring'
 Plug 'vim-scripts/matchit.zip'
+"Plug 'vim-scripts/php.vim'
 Plug 'mxw/vim-jsx'
 Plug 'mattn/emmet-vim'
 " auto insert phpnamespaces using \u
@@ -41,7 +42,9 @@ Plug 'janko/vim-test'
 Plug 'benmills/vimux'
 Plug 'vim-vdebug/vdebug'
 "Plug 'farmergreg/vim-lastplace'
-Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+"Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
+Plug 'majutsushi/tagbar'
 call plug#end()
 
 """""""""""""""""""""
@@ -256,10 +259,10 @@ vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
 noremap <silent> <c-n> :NERDTreeToggle <CR>
 
 " CTRL-P
-set runtimepath^=~/.vim/bundle/ctrlp.vim
+set runtimepath^=~/.vim/plugged/ctrlp.vim
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.jpg,*.gif,*.png
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules|public$',
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules|public|vendor$',
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
@@ -345,6 +348,9 @@ augroup BWCCreateDir
     autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
 
+" tagbar
+nmap <F8> :TagbarToggle<CR>
+
 " vim-test
 nmap <silent> t<C-n> :TestNearest<CR>
 nmap <silent> t<C-f> :TestFile<CR>
@@ -355,6 +361,8 @@ let test#strategy = "vimux"
 
 " ultisnips
 let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>" 
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>" 
 let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/plugged/ultisnips-reloaded/UltiSnips/']
 
 " vdebug
