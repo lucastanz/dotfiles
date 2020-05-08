@@ -1,4 +1,10 @@
 ################################################################################
+# update and install packages
+#
+sudo apt-get update
+sudo apt-get -y install tmux
+
+################################################################################
 # install vim bundles
 #
 vim -c 'PlugInstall' -c 'qa'
@@ -30,12 +36,23 @@ sudo make install
 ################################################################################
 # install fzf
 #
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
+if ! which fzf; then 
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
+fi
 
 ################################################################################
 # install ripgrep (Debian) - https://github.com/BurntSushi/ripgrep#installation
 #
- https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
- sudo dpkg -i ripgrep_11.0.2_amd64.deb
+https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+sudo dpkg -i ripgrep_11.0.2_amd64.deb
 
+################################################################################
+# tmux
+#
+mkdir -p ~/.tmux/plugins
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+################################################################################
+# phpstan for vim ale
+#
+composer global req phpstan/phpstan

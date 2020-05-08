@@ -21,7 +21,9 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " file explorer
+Plug 'skielbasa/vim-material-monokai'
 Plug 'scrooloose/nerdtree'
+Plug 'dense-analysis/ale'
 "
 " mappings
 Plug 'tpope/vim-surround'
@@ -35,12 +37,12 @@ Plug 'tpope/vim-fugitive'
 " airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-
+"
 "Plug 'vim-php/vim-php-refactoring'
 Plug 'vim-scripts/matchit.zip'
 
 " syntax
-Plug 'sheerun/vim-polyglot'
+"Plug 'sheerun/vim-polyglot'
 Plug 'mattn/emmet-vim'
 Plug '2072/PHP-Indenting-for-VIm'
 Plug 'benmills/vimux'
@@ -52,9 +54,12 @@ Plug 'vim-vdebug/vdebug'
 Plug 'SirVer/ultisnips' "snippet engine
 Plug 'lucastanz/ultisnips-reloaded' "snippets collection
 
+Plug 'StanAngeloff/php.vim', {'for': 'php'}
+Plug 'stephpy/vim-php-cs-fixer', {'for': 'php'}
+Plug 'nishigori/vim-php-dictionary', {'for': 'php'}
 " php autocompletion
 Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
-"Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+Plug 'alvan/vim-php-manual'
 
 " file structure navigator
 Plug 'majutsushi/tagbar'
@@ -325,6 +330,9 @@ set laststatus=2 " always show the bottom bar
 "
 set background=dark
 colorscheme molokai
+"set background=dark
+"set termguicolors
+"colorscheme material-monokai
 
 """"""""""""""""""""""""""""""""""""""""
 " tab settings for each language
@@ -394,6 +402,15 @@ if executable('rg')
   set grepprg=rg\ --vimgrep\ --no-heading
   set grepformat=%f:%l:%m
 endif
+
+""""""""""""""""""""""""""""""""""""""""
+" ale
+"
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\   'php': ['phpstan'],
+\}
+let g:airline#extensions#ale#enabled = 1 "errors or warnings on airline
 
 " to make higlighting work for both html and twig in twig files
 syntax on
